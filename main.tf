@@ -30,17 +30,19 @@ module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.9"
 
-  name               = local.lb_name
+  name                = local.lb_name
 
-  load_balancer_type = "application"
+  depends_on          = [module.s3_bucket]
 
-  internal           = true
+  load_balancer_type  = "application"
 
-  vpc_id             = var.aws_vpc_id
-  subnets            = var.aws_subnet_ids
-  security_groups    = var.aws_sg_ids
+  internal            = true
 
-  target_groups      = [
+  vpc_id              = var.aws_vpc_id
+  subnets             = var.aws_subnet_ids
+  security_groups     = var.aws_sg_ids
+
+  target_groups       = [
     {
       name             = "${local.lb_name}-tg"
       backend_protocol = "HTTP"
