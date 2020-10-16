@@ -13,7 +13,17 @@ provider "aws" {
 }
 
 locals {
-  lb_name = "example"
+  lb_name     = "example"
+
+  s3_buckets  = ["jolt23-repository", "jolt23-digital"]
+}
+
+module "s3_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+   count  = length(local.s3_buckets)
+
+  bucket = local.s3_buckets[count.index]
+  acl    = "private"
 }
 
 module "alb" {
